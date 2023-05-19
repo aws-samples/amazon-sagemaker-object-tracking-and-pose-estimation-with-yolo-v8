@@ -23,6 +23,8 @@ class YOLOService:
         self.conf = float(os.environ.get('SM_HP_CONF', '0.25'))
         self.iou = float(os.environ.get('SM_HP_IOU', '0.7'))
         self.half = os.environ.get('SM_HP_HALF', 'False')=='True'
+        self.tracker = os.environ.get('SM_HP_TRACKER', 'botsort')
+        assert self.tracker in ['bytetrack', 'botsort'], f"Only support 'bytetrack' and 'botsort' for now, but got '{self.tracker}'"
         print("YOLO configuration")
         print("======================")
         print(f"Model Name: {self.model_name}")
@@ -31,11 +33,16 @@ class YOLOService:
         print(f"Confidence: {self.conf}")
         print(f"Intersection over union (iou): {self.iou}")
         print(f"Half percision: {'Enabled' if self.half else 'Disabled'}")
+        print(f"Tracker: {self.tracker}")
+        
     def load_model(self):
         print(f"Loading YoloV8 model from {self.model_name}")
         self.model = YOLO(self.model_name)
         if YOLO_class.tracking:
             register_tracker(YOLO_class.model, persist=True)
+            self.model.model.args["mode"] = "track"
+            self.model.model.args["tracker"] = f"{self.tracker}.yaml"
+
     
 def tojson(Results, normalize=False):
     """Convert the object to JSON format."""
