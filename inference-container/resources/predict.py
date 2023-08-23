@@ -3,7 +3,7 @@ import numpy as np
 import json
 import base64
 from ultralytics import YOLO
-from ultralytics.tracker.track import register_tracker
+from ultralytics.trackers.track import register_tracker
 from flask import Flask, Response, request
 
 app = Flask(__name__)
