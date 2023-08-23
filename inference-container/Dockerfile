@@ -1,4 +1,4 @@
-FROM ultralytics/ultralytics:latest-python
+FROM ultralytics/ultralytics:8.0.158-python
 RUN pip install lap==0.4
 
 ##########################################################################################
@@ -18,5 +18,6 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
  
 COPY resources/*.* /app/
 ENV WORKDIR /app/
+WORKDIR /app/
 
-ENTRYPOINT ["python", "/app/serve.py"]
+ENTRYPOINT ["python", "serve.py"]
